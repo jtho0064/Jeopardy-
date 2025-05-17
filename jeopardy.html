@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Jeopardy Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #002b80;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 10px;
+    }
+    input[type="text"] {
+      padding: 5px;
+      font-size: 16px;
+      margin: 5px;
+      border-radius: 5px;
+    }
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      width: 90%;
+    }
+    th, td {
+      border: 2px solid #fff;
+      padding: 20px;
+      width: 16.6%;
+      height: 100px;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
+    th {
+      background-color: #004080;
+    }
+    td {
+      background-color: #0066cc;
+    }
+    .revealed {
+      background-color: #001f4d;
+    }
+    .scoreboard {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .player {
+      margin: 0 20px;
+    }
+    .player h3 {
+      margin-bottom: 5px;
+    }
+    button {
+      margin: 2px;
+      padding: 5px 10px;
+      font-size: 14px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Jeopardy Game</h1>
+  <div>
+    <input id="team1" placeholder="Team 1 Name" />
+    <input id="team2" placeholder="Team 2 Name" />
+    <input id="team3" placeholder="Team 3 Name" />
+    <button onclick="startGame()">Start Game</button>
+  </div>
+
+  <table id="jeopardy-board">
+    <thead>
+      <tr>
+        <th>Geography</th>
+        <th>Songs</th>
+        <th>Movies</th>
+        <th>Summer</th>
+        <th>Medical</th>
+      </tr>
+    </thead>
+    <tbody id="game-body"></tbody>
+  </table>
+
+  <div class="scoreboard" id="scoreboard" style="display:none;">
+    <div class="player">
+      <h3 id="name1">Team 1</h3>
+      <p id="score1">0</p>
+      <button onclick="adjustScore(1, 100)">+100</button>
+      <button onclick="adjustScore(1, -100)">-100</button>
+    </div>
+    <div class="player">
+      <h3 id="name2">Team 2</h3>
+      <p id="score2">0</p>
+      <button onclick="adjustScore(2, 100)">+100</button>
+      <button onclick="adjustScore(2, -100)">-100</button>
+    </div>
+    <div class="player">
+      <h3 id="name3">Team 3</h3>
+      <p id="score3">0</p>
+      <button onclick="adjustScore(3, 100)">+100</button>
+      <button onclick="adjustScore(3, -100)">-100</button>
+    </div>
+  </div>
+
+  <script>
+    const data = {
+      Geography: [
+        "What is the Antarctic Desert?",
+        "What is the Tigris River?",
+        "What is Wellington?",
+        "What is Alaska?",
+        "What is Canada?"
+      ],
+      Songs: [
+        "Who is Taylor Swift?",
+        "What is 'Let It Be'?",
+        "What is 'Don’t Stop Believin’'?",
+        "Who is The Weeknd?",
+        "Who is Prince?"
+      ],
+      Movies: [
+        "Who is Leonardo DiCaprio?",
+        "What is The Dark Knight?",
+        "What is The Matrix?",
+        "What is Barbie?",
+        "What is Forrest Gump?"
+      ],
+      Summer: [
+        "What is the Summer Solstice?",
+        "What is June?",
+        "What is watermelon?",
+        "What is Great Smoky Mountains National Park?",
+        "What is Vitamin D?"
+      ],
+      Medical: [
+        "What is blood pressure?",
+        "What is myocardial infarction?",
+        "What is the skin?",
+        "What is varicella-zoster?",
+        "What is level of consciousness?"
+      ]
+    };
+
+    const scores = [0, 0, 0];
+
+    function startGame() {
+      const categories = Object.keys(data);
+      const body = document.getElementById("game-body");
+      body.innerHTML = "";
+
+      for (let i = 0; i < 5; i++) {
+        let row = document.createElement("tr");
+        categories.forEach((cat, colIdx) => {
+          let cell = document.createElement("td");
+          cell.textContent = `$${(i + 1) * 100}`;
+          cell.onclick = function () {
+            if (!this.classList.contains("revealed")) {
+              this.innerHTML = data[cat][i];
+              this.classList.add("revealed");
+            }
+          };
+          row.appendChild(cell);
+        });
+        body.appendChild(row);
+      }
+
+      document.getElementById("name1").textContent = document.getElementById("team1").value || "Team 1";
+      document.getElementById("name2").textContent = document.getElementById("team2").value || "Team 2";
+      document.getElementById("name3").textContent = document.getElementById("team3").value || "Team 3";
+      document.getElementById("scoreboard").style.display = "flex";
+    }
+
+    function adjustScore(player, amount) {
+      scores[player - 1] += amount;
+      document.getElementById("score" + player).textContent = scores[player - 1];
+    }
+  </script>
+</body>
+</html>
